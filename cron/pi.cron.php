@@ -26,13 +26,13 @@ in this Software without prior written authorization from EllisLab, Inc.
 */
 
 $plugin_info = array(
-						'pi_name'			=> 'ExpressionEngine Cron',
-						'pi_version'		=> '1.1.1',
-						'pi_author'			=> 'Paul Burdick',
-						'pi_author_url'		=> 'http://www.expressionengine.com/',
-						'pi_description'	=> 'Allows the regular, scheduled calling of plugins and modules',
-						'pi_usage'			=> Cron::usage()
-					);
+	'pi_name'        => 'ExpressionEngine Cron',
+	'pi_version'     => '1.1.2',
+	'pi_author'	     => 'Paul Burdick',
+	'pi_author_url'	 => 'http://www.expressionengine.com/',
+	'pi_description' => 'Allows the regular, scheduled calling of plugins and modules',
+	'pi_usage'       => Cron::usage()
+);
 
 /**
  *  Cron Class
@@ -235,7 +235,8 @@ class Cron {
         			break;
         			
         			case 'year'	:
-        				$start = 2005; $end = 2015;
+						$current_year = date("Y");
+        				$start = $current_year; $end = $current_year + 5;
         			break;
         		}
         		
