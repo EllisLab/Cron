@@ -36,14 +36,14 @@ Date and time parameters:
 - `hour=""` - (0-23, where 0 is midnight and 23 is 11pm), default is 0
 - `day=""` - (1-31), default is *
 - `month=""` - (1-12), default is *
-- `weekday="" - (0-6, where 0 Sunday and 1 is Monday), default is *
+- `weekday=""` - (0-6, where 0 Sunday and 1 is Monday), default is *
 
 There are several ways of specifying multiple values in a time or date parameter:
 
-- The comma (',') operator specifies a list of values, for example: "1,3,4,7,8"
-- The dash ('-') operator specifies a range of values, for example: "1-6", which is equivalent to "1,2,3,4,5,6"
+- The comma (`,`) operator specifies a list of values, for example: "1,3,4,7,8"
+- The dash (`-`) operator specifies a range of values, for example: "1-6", which is equivalent to "1,2,3,4,5,6"
 - The comma and dash can be combined to specify multiple ranges and values. For example: 1-3,5,10-12, which is equivalent to 1,2,3,5,10,11,12
-- The asterisk ('*') operator specifies all possible values for a field. For example, an asterisk in the hour time field would be equivalent to 'every hour'.
+- The asterisk (`*`) operator specifies all possible values for a field. For example, an asterisk in the hour time field would be equivalent to 'every hour'.
 
 Plugin/module parameters:
 
@@ -56,6 +56,10 @@ and then the name of the function being called in that module/plugin's class.
 
 
 ## Change Log
+
+### 2.0.1
+
+- Fixed a bug where the plugin wouldn't work after 2015.
 
 ### 2.0
 
@@ -79,10 +83,10 @@ and then the name of the function being called in that module/plugin's class.
 
 ### 1.0.2
 
-- Fixed a bug with the last possible check code having to do with the weekday. 
+- Fixed a bug with the last possible check code having to do with the weekday.
 Figured out how to make the plugin a little bit faster too.
 
 ### 1.0.1
 
-- Fixed a minor little bug that occurred when the day parameter was set to * 
+- Fixed a minor little bug that occurred when the day parameter was set to *
 and the month before this month had more days in it than the current month.
