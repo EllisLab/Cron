@@ -235,7 +235,8 @@ class Cron {
         			break;
         			
         			case 'year'	:
-        				$start = 2005; $end = 2015;
+        				$current_year = date("Y");
+        				$start = $current_year; $end = $current_year + 5;
         			break;
         		}
         		
