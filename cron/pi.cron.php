@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /*
-Copyright (C) 2005 - 2015 EllisLab, Inc.
+Copyright (C) 2005 - 2016 EllisLab, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -31,8 +31,8 @@ in this Software without prior written authorization from EllisLab, Inc.
  *
  * @package			ExpressionEngine
  * @category		Plugin
- * @author          EllisLab
- * @copyright       Copyright (c) 2004 - 2015, EllisLab, Inc.
+ * @author			EllisLab
+ * @copyright		Copyright (c) 2004 - 2016, EllisLab, Inc.
  * @link			https://github.com/EllisLab/Cron
  */
 
@@ -62,37 +62,35 @@ class Cron {
 	 * @access	public
 	 * @return	void
 	 */
-    function __construct()
-    {
+	function __construct()
+	{
+		$this->params = array('minute', 'hour', 'day', 'month', 'weekday', 'year');
 
+		$this->check = time();
+		list($this->now['minute'], $this->now['hour'], $this->now['day'], $this->now['month'], $this->now['weekday'], $this->now['year']) = explode(',', strftime("%M,%H,%d,%m,%w,%Y", $this->check));
 
-        $this->params = array('minute', 'hour', 'day', 'month', 'weekday', 'year');
+		$this->id			= md5(ee()->TMPL->tagproper);
+		$this->cache_file	= APPPATH.'cache/'.$this->cache_name.'/'.$this->id;
 
-        $this->check = time();
-        list($this->now['minute'], $this->now['hour'], $this->now['day'], $this->now['month'], $this->now['weekday'], $this->now['year']) = explode(',', strftime("%M,%H,%d,%m,%w,%Y", $this->check));
-
-        $this->id			= md5(ee()->TMPL->tagproper);
-        $this->cache_file	= APPPATH.'cache/'.$this->cache_name.'/'.$this->id;
-
-        if ($this->parse_cron() === TRUE)
-        {
+		if ($this->parse_cron() === TRUE)
+		{
 			ee()->TMPL->log_item("Parse Cron job");
 
-        	$this->write_cache();
+			$this->write_cache();
 
-        	if (ee()->TMPL->fetch_param('module') !== FALSE)
-        	{
-        		$this->return_data = $this->class_handler(ee()->TMPL->fetch_param('module'), 'modules');
-        	}
-        	elseif(ee()->TMPL->fetch_param('plugin') !== FALSE)
-        	{
-        		$this->return_data = $this->class_handler(ee()->TMPL->fetch_param('plugin'), 'plugins');
-        	}
-        	else
-        	{
-        		$this->return_data = ee()->TMPL->tagdata;
-        	}
-        }
+			if (ee()->TMPL->fetch_param('module') !== FALSE)
+			{
+				$this->return_data = $this->class_handler(ee()->TMPL->fetch_param('module'), 'modules');
+			}
+			elseif(ee()->TMPL->fetch_param('plugin') !== FALSE)
+			{
+				$this->return_data = $this->class_handler(ee()->TMPL->fetch_param('plugin'), 'plugins');
+			}
+			else
+			{
+				$this->return_data = ee()->TMPL->tagdata;
+			}
+		}
 		else
 		{
 			ee()->TMPL->log_item("Cron cache not yet expired");
@@ -107,8 +105,8 @@ class Cron {
 	 * Function description
 	 *
 	 * @access   public
-	 * @param    string
-	 * @param    string
+	 * @param	string
+	 * @param	string
 	 * @return   string
 	 */
 	function class_handler($str, $type='plugins')
@@ -119,9 +117,9 @@ class Cron {
 
 		$x = explode(':', trim(str_replace(array('{exp:','}'), '', $str)));
 
-        if (in_array($x['0'], ee()->TMPL->{$type}))
-        {
-        	if ( ! class_exists($x['0']))
+		if (in_array($x['0'], ee()->TMPL->{$type}))
+		{
+			if ( ! class_exists($x['0']))
 			{
 				if ($type == 'modules')
 				{
@@ -134,15 +132,15 @@ class Cron {
 						require_once PATH_THIRD.$x['0'].'/mod.'.$x['0'].'.php' ;
 					}
 				}
-                else
+				else
 				{
 					if (in_array($x['0'], ee()->core->native_plugins))
 					{
-                		require_once PATH_PI.'pi.'.$x['0'].'.php';
+						require_once PATH_PI.'pi.'.$x['0'].'.php';
 					}
 					else
 					{
-                		require_once PATH_THIRD.$x['0'].'/'.'pi.'.$x['0'].'.php';
+						require_once PATH_THIRD.$x['0'].'/'.'pi.'.$x['0'].'.php';
 					}
 				}
 			}
@@ -157,18 +155,18 @@ class Cron {
 			// Does the method exist?
 			if (method_exists($EE, $meth_name))
 			{
-        		if (strtolower($class_name) == $meth_name)
-                {
-                    $data = (isset($EE->return_data)) ? $EE->return_data : '';
-                }
-                else
-                {
-                    $data = $EE->$meth_name();
-                }
-        	}
-        }
+				if (strtolower($class_name) == $meth_name)
+				{
+					$data = (isset($EE->return_data)) ? $EE->return_data : '';
+				}
+				else
+				{
+					$data = $EE->$meth_name();
+				}
+			}
+		}
 
-        return $data;
+		return $data;
 	}
 
 	// --------------------------------------------------------------------
@@ -183,154 +181,154 @@ class Cron {
 	{
 
 		if ( ! file_exists($this->cache_file))
-        {
-        	return TRUE;
-        }
+		{
+			return TRUE;
+		}
 
-        list($this->last['minute'], $this->last['hour'], $this->last['day'], $this->last['month'], $this->last['weekday'], $this->last['year']) = explode(',', strftime("%M,%H,%d,%m,%w,%Y", $this->get_cache_file()));
+		list($this->last['minute'], $this->last['hour'], $this->last['day'], $this->last['month'], $this->last['weekday'], $this->last['year']) = explode(',', strftime("%M,%H,%d,%m,%w,%Y", $this->get_cache_file()));
 
 		// ------------------------------
-        //  Cron Parameters
-        // ------------------------------
+		//  Cron Parameters
+		// ------------------------------
 
-        foreach($this->params as $param)
-        {
-        	if (ee()->TMPL->fetch_param($param) !== FALSE && ee()->TMPL->fetch_param($param) != '*')
-        	{
-        		$value = $this->expand_ranges(ee()->TMPL->fetch_param($param));
-        	}
-        	else
-        	{
-        		$value = array();
+		foreach($this->params as $param)
+		{
+			if (ee()->TMPL->fetch_param($param) !== FALSE && ee()->TMPL->fetch_param($param) != '*')
+			{
+				$value = $this->expand_ranges(ee()->TMPL->fetch_param($param));
+			}
+			else
+			{
+				$value = array();
 
-        		switch($param)
-        		{
-        			case 'minute'	:
-        				$start = 0; $end = 59;
-        			break;
+				switch($param)
+				{
+					case 'minute'	:
+						$start = 0; $end = 59;
+					break;
 
-        			case 'hour'		:
-        				$start = 0; $end = 23;
-        			break;
+					case 'hour'		:
+						$start = 0; $end = 23;
+					break;
 
-        			case 'day'		:
-        				$start = 1; $end = 31;  // Maximum amount of days in month
-        			break;
+					case 'day'		:
+						$start = 1; $end = 31;  // Maximum amount of days in month
+					break;
 
-        			case 'month'	:
-        				$start = 1; $end = 12;
-        			break;
+					case 'month'	:
+						$start = 1; $end = 12;
+					break;
 
-        			case 'weekday'	:
-        				$start = 0; $end = 6;
-        			break;
+					case 'weekday'	:
+						$start = 0; $end = 6;
+					break;
 
-        			case 'year'	:
-        				$current_year = date("Y");
-        				$start = $current_year; $end = $current_year + 5;
-        			break;
-        		}
+					case 'year'	:
+						$current_year = date("Y");
+						$start = $current_year; $end = $current_year + 5;
+					break;
+				}
 
-        		for ($i=$start; $i <= $end; ++$i)
-        		{
-        			$value[] = $i;
-        		}
-        	}
+				for ($i=$start; $i <= $end; ++$i)
+				{
+					$value[] = $i;
+				}
+			}
 
-        	$this->crontab[$param] = $value;
-        }
+			$this->crontab[$param] = $value;
+		}
 
-        // ---------------------------------
-        //  Repeat Check, So Invalid
-        // ---------------------------------
+		// ---------------------------------
+		//  Repeat Check, So Invalid
+		// ---------------------------------
 
-        // If even one is different, the last check was not this check
+		// If even one is different, the last check was not this check
 
-        $check_same = TRUE;
+		$check_same = TRUE;
 
-        foreach($this->params as $param)
-        {
-        	if ($this->now[$param] != $this->last[$param])
-        	{
-        		$check_same = FALSE;
-        	}
-        }
+		foreach($this->params as $param)
+		{
+			if ($this->now[$param] != $this->last[$param])
+			{
+				$check_same = FALSE;
+			}
+		}
 
-        if ($check_same === TRUE) return FALSE;
-
-
-        // ------------------------------
-        //  Two Valid Cases
-        //
-        //  1.  We are supposed to perform the cron now. To determine
-        //  if this is the case we just see if the now matches up with all
-        //  possible cron times in $this->crontab. We also have to make sure
-        //  that we have not performed this cron check for 'now' already
-        //
-        //  2.  We missed a check and need to perform the cron now to make up
-        //  for that little oversight.  To determine this, we find the last
-        //  possible cron check time before now and see if there was a check
-        //  at that time.
-        // ------------------------------
-
-        // ------------------------------
-        //  Check the First Case
-        // ------------------------------
-
-        $check_now	= TRUE;
-
-        foreach($this->params as $param)
-        {
-        	// If even one is different, now is not the time to check
-
-        	if ( ! in_array($this->now[$param], $this->crontab[$param]))
-        	{
-        		$check_now = FALSE;
-        	}
-        }
-
-        if ($check_now === TRUE) return TRUE; // Success!
+		if ($check_same === TRUE) return FALSE;
 
 
+		// ------------------------------
+		//  Two Valid Cases
+		//
+		//  1.  We are supposed to perform the cron now. To determine
+		//  if this is the case we just see if the now matches up with all
+		//  possible cron times in $this->crontab. We also have to make sure
+		//  that we have not performed this cron check for 'now' already
+		//
+		//  2.  We missed a check and need to perform the cron now to make up
+		//  for that little oversight.  To determine this, we find the last
+		//  possible cron check time before now and see if there was a check
+		//  at that time.
+		// ------------------------------
 
-        // ------------------------------
-        //  Check the Second Case
-        //
-        //  This is a great deal less enjoyable, since we have to find the
-        //  precise last possible check before this point in time.  Once
-        //  we figure that out though, it is all so easy.
-        // ------------------------------
+		// ------------------------------
+		//  Check the First Case
+		// ------------------------------
 
-        $this->last_possible = $this->find_last_possible_alt(); // returns time array
+		$check_now	= TRUE;
 
-        if ($this->last_possible === FALSE)
+		foreach($this->params as $param)
+		{
+			// If even one is different, now is not the time to check
+
+			if ( ! in_array($this->now[$param], $this->crontab[$param]))
+			{
+				$check_now = FALSE;
+			}
+		}
+
+		if ($check_now === TRUE) return TRUE; // Success!
+
+
+
+		// ------------------------------
+		//  Check the Second Case
+		//
+		//  This is a great deal less enjoyable, since we have to find the
+		//  precise last possible check before this point in time.  Once
+		//  we figure that out though, it is all so easy.
+		// ------------------------------
+
+		$this->last_possible = $this->find_last_possible_alt(); // returns time array
+
+		if ($this->last_possible === FALSE)
 		{
 			return FALSE;
-        }
+		}
 
-        $check_done	= TRUE;
+		$check_done	= TRUE;
 
-        foreach($this->params as $param)
-        {
-        	// If even one is different, the last check was not performed
-        	// Very sad, but we can do it now and save ourselves from certain doom
+		foreach($this->params as $param)
+		{
+			// If even one is different, the last check was not performed
+			// Very sad, but we can do it now and save ourselves from certain doom
 
-        	if ($this->last[$param] != $this->last_possible[$param])
-        	{
-        		$check_done = FALSE;
-        	}
-        }
+			if ($this->last[$param] != $this->last_possible[$param])
+			{
+				$check_done = FALSE;
+			}
+		}
 
-        if ($check_done === FALSE)
+		if ($check_done === FALSE)
 		{
 			return TRUE; // Success!
 		}
 
-        // ---------------------------------
-        //  Not time to check, take a nap
-        // ---------------------------------
+		// ---------------------------------
+		//  Not time to check, take a nap
+		// ---------------------------------
 
-        return FALSE;
+		return FALSE;
 	}
 
 	// --------------------------------------------------------------------
@@ -352,55 +350,55 @@ class Cron {
 	 * @return   string
 	 */
 	function find_last_possible()
-    {
-    	$i = 0;
+	{
+		$i = 0;
 		$x = array();
 
-    	while(TRUE)
-    	{
-    		$this->check -= 60;  // Knock off sixty seconds
+		while(TRUE)
+		{
+			$this->check -= 60;  // Knock off sixty seconds
 
-    		//  I have no idea how efficient this is, needs checking into.
-    		//  I hope it is not too much slower than doing it manually
-    		//  with subtraction because that is messy and this is clean
+			//  I have no idea how efficient this is, needs checking into.
+			//  I hope it is not too much slower than doing it manually
+			//  with subtraction because that is messy and this is clean
 
-    		list($x['minute'], $x['hour'], $x['day'], $x['month'], $x['weekday'], $x['year']) = explode(',', strftime("%M,%H,%d,%m,%w,%Y", $this->check));
+			list($x['minute'], $x['hour'], $x['day'], $x['month'], $x['weekday'], $x['year']) = explode(',', strftime("%M,%H,%d,%m,%w,%Y", $this->check));
 
-    		$valid	= TRUE;
+			$valid	= TRUE;
 
-        	foreach($this->params as $param)
-        	{
-        		// If even one is different, now is not the time to check
+			foreach($this->params as $param)
+			{
+				// If even one is different, now is not the time to check
 
-        		if ( ! in_array($x[$param], $this->crontab[$param]))
-        		{
-        			$valid = FALSE;
-        		}
-    		}
+				if ( ! in_array($x[$param], $this->crontab[$param]))
+				{
+					$valid = FALSE;
+				}
+			}
 
-    		if ($valid === TRUE)
+			if ($valid === TRUE)
 			{
 				return $x;
 			}
 
-    		$i++;
+			$i++;
 
-    		if ($i > 45000)
-    		{
-    			break; // Safety, approximately a one month check
-    		}
-    	}
+			if ($i > 45000)
+			{
+				break; // Safety, approximately a one month check
+			}
+		}
 
-    	return FALSE;
-    }
+		return FALSE;
+	}
 
 	// --------------------------------------------------------------------
 
-    // -----------------------------------------
-    //  Faster version of the function, which seems to be
-    //  just a little bit faster so we use it unless there is
-    //  some problem.
-    // ----------------------------------------
+	// -----------------------------------------
+	//  Faster version of the function, which seems to be
+	//  just a little bit faster so we use it unless there is
+	//  some problem.
+	// ----------------------------------------
 
 
 	/**
@@ -410,105 +408,105 @@ class Cron {
 	 * @return   string
 	 */
 	function find_last_possible_alt()
-    {
-    	$i = 0;
+	{
+		$i = 0;
 		$x = $this->now;
 
-    	while(TRUE)
-    	{
-    		// ------------------------------
-    		//  Reduce, Reuse, Recycle
-    		// ------------------------------
+		while(TRUE)
+		{
+			// ------------------------------
+			//  Reduce, Reuse, Recycle
+			// ------------------------------
 
-    		$x['minute']--;
+			$x['minute']--;
 
-    		if ($x['minute'] < 0)
-    		{
-    			$x['minute'] = 59;
-    			$x['hour']--;
+			if ($x['minute'] < 0)
+			{
+				$x['minute'] = 59;
+				$x['hour']--;
 
-    			if ($x['hour'] < 0)
-    			{
-    				$x['hour'] = 23;
-    				$x['day']--;
+				if ($x['hour'] < 0)
+				{
+					$x['hour'] = 23;
+					$x['day']--;
 
-    				if($x['day'] < 1)
-    				{
-    					$x['month']--;
+					if($x['day'] < 1)
+					{
+						$x['month']--;
 
-    					if ($x['month'] < 1)
-    					{
-    						$x['month'] = 12;
-    						$x['year']--;
-    					}
+						if ($x['month'] < 1)
+						{
+							$x['month'] = 12;
+							$x['year']--;
+						}
 
-    					$x['day'] = $this->days_in_month($x['month'], $x['year']);
-    				}
+						$x['day'] = $this->days_in_month($x['month'], $x['year']);
+					}
 
-    				$x['weekday']--;
+					$x['weekday']--;
 
-    				if ($x['weekday'] < 0)
-    				{
-    					$x['weekday'] = 6;
-    				}
-    			}
-    		}
+					if ($x['weekday'] < 0)
+					{
+						$x['weekday'] = 6;
+					}
+				}
+			}
 
-    		// ------------------------------
-    		//  Check to see if it is a valid cron check
-    		// ------------------------------
+			// ------------------------------
+			//  Check to see if it is a valid cron check
+			// ------------------------------
 
-    		$valid	= TRUE;
+			$valid	= TRUE;
 
-        	foreach($this->params as $param)
-        	{
-        		// If even one is different, now is not the time to check
+			foreach($this->params as $param)
+			{
+				// If even one is different, now is not the time to check
 
-        		if ( ! in_array($x[$param], $this->crontab[$param]))
-        		{
-        			$valid = FALSE;
-        		}
-    		}
+				if ( ! in_array($x[$param], $this->crontab[$param]))
+				{
+					$valid = FALSE;
+				}
+			}
 
-    		if ($valid === TRUE)
-    		{
-    			$this->check = mktime($x['hour'], $x['minute'], 1, $x['month'], $x['day'], $x['year']);
-    			return $x;
-    		}
+			if ($valid === TRUE)
+			{
+				$this->check = mktime($x['hour'], $x['minute'], 1, $x['month'], $x['day'], $x['year']);
+				return $x;
+			}
 
-    		// ------------------------------------
-    		//  Go Back No Further Than Last Check
-    		// ------------------------------------
+			// ------------------------------------
+			//  Go Back No Further Than Last Check
+			// ------------------------------------
 
-    		$end_check = TRUE;
+			$end_check = TRUE;
 
-        	foreach($this->params as $param)
-        	{
-        		if ($x[$param] != $this->last[$param])
-        		{
-        			$end_check = FALSE;
-        		}
-        	}
+			foreach($this->params as $param)
+			{
+				if ($x[$param] != $this->last[$param])
+				{
+					$end_check = FALSE;
+				}
+			}
 
-        	if ($end_check === TRUE)
+			if ($end_check === TRUE)
 			{
 				return FALSE;
-    		}
+			}
 
-    		// ------------------------------------
-    		//  Safety Check
-    		// ------------------------------------
+			// ------------------------------------
+			//  Safety Check
+			// ------------------------------------
 
-    		$i++;
+			$i++;
 
-    		if ($i > 45000)
-    		{
-    			break; // Safety, approximately a one month check
-    		}
-    	}
+			if ($i > 45000)
+			{
+				break; // Safety, approximately a one month check
+			}
+		}
 
-    	return FALSE;
-    }
+		return FALSE;
+	}
 
 	// --------------------------------------------------------------------
 
@@ -525,37 +523,37 @@ class Cron {
 	 * Creates an array of valid numbers that the string represents
 	 *
 	 * @access   public
-	 * @param    string
+	 * @param	string
 	 * @return   array
 	 */
 	function expand_ranges($str)
-    {
-    	if (strstr($str,  ","))
-    	{
-    		$tmp1 = explode(",", $str);
+	{
+		if (strstr($str,  ","))
+		{
+			$tmp1 = explode(",", $str);
 
-    		$count = count($tmp1);
+			$count = count($tmp1);
 
-    		//Loop through each comma-separated value
+			//Loop through each comma-separated value
 
-    		for ($i = 0; $i < $count; $i++)
-    		{
-    			if (strstr($tmp1[$i],  "-"))
-    			{
-    				// Expand Any Ranges
-                    $tmp2 = explode("-", $tmp1[$i]);
+			for ($i = 0; $i < $count; $i++)
+			{
+				if (strstr($tmp1[$i],  "-"))
+				{
+					// Expand Any Ranges
+					$tmp2 = explode("-", $tmp1[$i]);
 
-                    for ($j = $tmp2[0]; $j <= $tmp2[1]; $j++)
-                    {
-                    	$ret[] = $j;
-                    }
+					for ($j = $tmp2[0]; $j <= $tmp2[1]; $j++)
+					{
+						$ret[] = $j;
+					}
 
-                }
-                else
-                {
-                	$ret[] = $tmp1[$i];
-                }
-            }
+				}
+				else
+				{
+					$ret[] = $tmp1[$i];
+				}
+			}
 
 		}
 		elseif(strstr($str,  "-"))
@@ -571,16 +569,16 @@ class Cron {
 		}
 		else
 		{
-        	// Single Value, Only
-        	$ret[] = $str;
-        }
+			// Single Value, Only
+			$ret[] = $str;
+		}
 
 		return $ret;
 	}
 
-    // --------------------------------------------------------------------
+	// --------------------------------------------------------------------
 
-    // ---------------------------------------------
+	// ---------------------------------------------
 	//  Returns Weekday Number for Date
 	// ---------------------------------------------
 
@@ -590,9 +588,9 @@ class Cron {
 	 * Returns weekday number for date
 	 *
 	 * @access   public
-	 * @param    string
-	 * @param    string
-	 * @param    string
+	 * @param	string
+	 * @param	string
+	 * @param	string
 	 * @return   number
 	 */
 	function day_of_week($month, $day, $year)
@@ -615,7 +613,7 @@ class Cron {
 	 * Returns Days in a Specific Month/Year
 	 *
 	 * @access   public
-	 * @param    type
+	 * @param	type
 	 * @return   type
 	 */
 	function days_in_month($month, $year)
@@ -634,7 +632,7 @@ class Cron {
 	 *
 	 *
 	 * @access   public
-	 * @param    string
+	 * @param	string
 	 * @return   void
 	 */
 
@@ -651,9 +649,9 @@ class Cron {
 	 * @access   public
 	 * @return   void
 	 */
-    function write_cache()
-    {
-    	if ( ! @is_dir(APPPATH.'cache/'.$this->cache_name))
+	function write_cache()
+	{
+		if ( ! @is_dir(APPPATH.'cache/'.$this->cache_name))
 		{
 			if ( ! @mkdir(APPPATH.'cache/'.$this->cache_name, 0777))
 			{
@@ -663,16 +661,16 @@ class Cron {
 			@chmod(APPPATH.'cache/'.$this->cache_name, 0777);
 		}
 
-    	if ($fp = @fopen($this->cache_file, 'wb'))
-    	{
-    		flock($fp, LOCK_EX);
-        	fwrite($fp, $this->check);
-        	flock($fp, LOCK_UN);
-        	fclose($fp);
-    	}
+		if ($fp = @fopen($this->cache_file, 'wb'))
+		{
+			flock($fp, LOCK_EX);
+			fwrite($fp, $this->check);
+			flock($fp, LOCK_UN);
+			fclose($fp);
+		}
 
-    	@chmod($this->cache_file, 0777);
-    }
+		@chmod($this->cache_file, 0777);
+	}
 
 	// --------------------------------------------------------------------
 
@@ -682,25 +680,28 @@ class Cron {
 	 * @access   public
 	 * @return   string
 	 */
-    function get_cache_file()
-    {
-        $cache = '';
+	function get_cache_file()
+	{
+		$cache = '';
 
-        if ($fp = @fopen($this->cache_file, 'rb'))
-        {
-        	flock($fp, LOCK_SH);
+		if ($fp = @fopen($this->cache_file, 'rb'))
+		{
+			flock($fp, LOCK_SH);
 
-        	$cache = @fread($fp, filesize($this->cache_file));
+			$cache = @fread($fp, filesize($this->cache_file));
 
-        	flock($fp, LOCK_UN);
+			flock($fp, LOCK_UN);
 
-        	fclose($fp);
-        }
+			fclose($fp);
+		}
 
-        return trim($cache);
+		return trim($cache);
 
 	}
 
 	// --------------------------------------------------------------------
 
 }
+// END CLASS
+
+// EOF
