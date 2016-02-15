@@ -1,0 +1,29 @@
+language: php
+
+php:
+  - 5.3
+  - 5.4
+  - 5.5
+  - 5.6
+  - 7.0
+
+install:
+  - composer install
+
+script:
+  - vendor/jakub-onderka/php-parallel-lint/parallel-lint --exclude vendor .
+
+before_deploy: "zip -r 'Cron' cron"
+
+deploy:
+  provider: releases
+  api_key:
+    secure: mksWi0izhEWhU3ANoUxPQ0joBy4yCwiu7Y17HjvxxVYDuVXM/73ie1zQ34AFCtts4FxNmwrT1tAxVksDa41k1a6x3paxfcT6PySletw4RB3T3OmxNO4HYsvmtSL4DVWw7ru5btlFTVMB+cClqAP3u+T+14QPOrYfYJWqz5ckf+w=
+  file: Cron.zip
+  skip_cleanup: true
+  on:
+    repo: EllisLab/Cron
+    php: 7.0
+    tags: true
+    condition: $TRAVIS_PULL_REQUEST = false
+

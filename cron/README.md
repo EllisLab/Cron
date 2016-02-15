@@ -2,6 +2,12 @@
 
 Allows the calling of plugin and module scripts on a regular, scheduled basis. Unlike a true server cron that can be scheduled to the second, it is triggered by hits to the page that includes your cron tag. It should be used on templates that get regular traffic, or that are themselves accessed by a server cron.
 
+## Installation
+
+1. Download the [latest release](https://github.com/EllisLab/Cron/releases/latest).
+2. Copy the `cron` folder to your `system/user/addons` folder (you can ignore the rest of this repository's files).
+3. In your ExpressionEngine control panel, visit the Add-On Manager and click Install next to "Cron - Base Plugin".
+
 ## Usage
 
 ### `{exp:cron}`
@@ -57,11 +63,15 @@ and then the name of the function being called in that module/plugin's class.
 
 ## Change Log
 
+### 2.0.2
+
+- Improved instructions
+
 ### 2.0.1
 
 - Fixed a bug where the plugin wouldn't work after 2015.
 
-### 2.0
+### 2.0.0
 
 - Updated plugin to be 3.0 compatible
 
@@ -69,7 +79,7 @@ and then the name of the function being called in that module/plugin's class.
 
 - Fixed a bug that caused the plugin to stop working after December 2010
 
-### 1.1
+### 1.1.0
 
 - Updated plugin to be 2.0 compatible
 
@@ -90,3 +100,25 @@ Figured out how to make the plugin a little bit faster too.
 
 - Fixed a minor little bug that occurred when the day parameter was set to *
 and the month before this month had more days in it than the current month.
+
+## Additional Files
+
+You may be wondering what the rest of the files in this package are for. They are solely for development, so if you are forking the GitHub repo, they can be helpful. If you are just using the add-on in your ExpressionEngine installation, you can ignore all of these files.
+
+- **.editorconfig**: [EditorConfig](http://editorconfig.org) helps developers maintain consistent coding styles across files and text editors.
+- **.gitignore:** [.gitignore](https://git-scm.com/docs/gitignore) lets you specify files in your working environment that you do not want under source control.
+- **.travis.yml:** A [Travis CI](https://travis-ci.org) configuration file for continuous integration (automated testing, releases, etc.).
+- **.composer.json:** A [Composer project setup file](https://getcomposer.org/doc/01-basic-usage.md) that manages development dependencies.
+- **.composer.lock:** A [list of dependency versions](https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file) that Composer has locked to this project.
+
+## License
+
+Copyright (C) 2004 - 2016 EllisLab, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL ELLISLAB, INC. BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Except as contained in this notice, the name of EllisLab, Inc. shall not be used in advertising or otherwise to promote the sale, use or other dealings in this Software without prior written authorization from EllisLab, Inc.
