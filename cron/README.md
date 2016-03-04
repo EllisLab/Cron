@@ -29,6 +29,13 @@ and then the name of the function being called in that module/plugin's class.
 - `plugin="send_email:mailinglist"` - Calls the mailinglist function in the Send Email plugin
 - `module="moblog:check"` - Calls the check function in the Moblog module
 
+## Parameters - Environment
+
+You may specify a string containing the environment the cron plugin should run in. Multiple environments should be separated
+by the pipe (`|`) character.
+
+- `environment="www.yoursite.com"` - Restricts the running of the plugin to the www.yoursite.com environment
+
 ## Examples
 
 Checks your moblogs during the first minute of every hour of every day.
@@ -41,12 +48,14 @@ Displays this content once every minute of every hour on the 1st, 15th, and 31st
         Your content
     {/exp:cron}
 
-Calls the plugin Send Email and sends out your daily mailinglist.
+Calls the plugin Send Email and sends out your daily mailinglist when run from the www.yoursite.com and stg.yoursite.com environments.
 
-    {exp:cron minute="*" hour="*" day="1,15,31" month="*" plugin="send_email:mailinglist"}{/exp:cron}
+    {exp:cron minute="*" hour="*" day="1,15,31" month="*" plugin="send_email:mailinglist" environment="www.yoursite.com|stg.yoursite.com"}{/exp:cron}
 
 ## Change Log
 
+- 1.2.0
+    - Added parameter for environment
 - 1.1.2
     - Fixed a bug that caused the plugin to stop working after December 2015
 - 1.1.1

@@ -75,37 +75,44 @@ class Cron {
     {
         $this->EE =& get_instance();
 
-        $this->params = array('minute', 'hour', 'day', 'month', 'weekday', 'year');
-
-        $this->check = time();
-        list($this->now['minute'], $this->now['hour'], $this->now['day'], $this->now['month'], $this->now['weekday'], $this->now['year']) = explode(',', strftime("%M,%H,%d,%m,%w,%Y", $this->check));
-
-        $this->id			= md5($this->EE->TMPL->tagproper);
-        $this->cache_file	= APPPATH.'cache/'.$this->cache_name.'/'.$this->id;
-
-        if ($this->parse_cron() === TRUE)
+        if ($this->check_environment_correct() === TRUE)
         {
-			$this->EE->TMPL->log_item("Parse Cron job");
+            $this->params = array('minute', 'hour', 'day', 'month', 'weekday', 'year');
 
-        	$this->write_cache();
+            $this->check = time();
+            list($this->now['minute'], $this->now['hour'], $this->now['day'], $this->now['month'], $this->now['weekday'], $this->now['year']) = explode(',', strftime("%M,%H,%d,%m,%w,%Y", $this->check));
 
-        	if ($this->EE->TMPL->fetch_param('module') !== FALSE)
-        	{
-        		$this->return_data = $this->class_handler($this->EE->TMPL->fetch_param('module'), 'modules');
-        	}
-        	elseif($this->EE->TMPL->fetch_param('plugin') !== FALSE)
-        	{
-        		$this->return_data = $this->class_handler($this->EE->TMPL->fetch_param('plugin'), 'plugins');
-        	}
-        	else
-        	{
-        		$this->return_data = $this->EE->TMPL->tagdata;
-        	}
+            $this->id			= md5($this->EE->TMPL->tagproper);
+            $this->cache_file	= APPPATH.'cache/'.$this->cache_name.'/'.$this->id;
+
+            if ($this->parse_cron() === TRUE)
+            {
+    			$this->EE->TMPL->log_item("Parse Cron job");
+
+            	$this->write_cache();
+
+            	if ($this->EE->TMPL->fetch_param('module') !== FALSE)
+            	{
+            		$this->return_data = $this->class_handler($this->EE->TMPL->fetch_param('module'), 'modules');
+            	}
+            	elseif($this->EE->TMPL->fetch_param('plugin') !== FALSE)
+            	{
+            		$this->return_data = $this->class_handler($this->EE->TMPL->fetch_param('plugin'), 'plugins');
+            	}
+            	else
+            	{
+            		$this->return_data = $this->EE->TMPL->tagdata;
+            	}
+            }
+    		else
+    		{
+    			$this->EE->TMPL->log_item("Cron cache not yet expired");
+    		}
         }
-		else
-		{
-			$this->EE->TMPL->log_item("Cron cache not yet expired");
-		}
+        else
+        {
+            $this->EE->TMPL->log_item("Cron job does not have correct environment");
+        }
 	}
 
 	// --------------------------------------------------------------------
@@ -709,6 +716,23 @@ class Cron {
         return trim($cache);
 
 	}
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Validates the running environment for the cron job
+     *
+     * @access   public
+     * @return   boolean
+     */
+    function check_environment_correct()
+    {
+        $environment_array = explode('|', strtolower($this->EE->TMPL->fetch_param('environment')));
+
+        return ( ! empty($environment_array))
+            ? (in_array(strtolower($_SERVER['SERVER_NAME']), $environment_array))
+            : TRUE;
+    }
 
 	// --------------------------------------------------------------------
 
